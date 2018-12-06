@@ -1,0 +1,81 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Giphy App</title>
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+
+</head>
+
+<body>
+	<div class="container-fluid" id="buttons">
+		<div class="row">
+			<input type="text" id="new_data">
+			<button id="data_submission">Submit</button>
+		</div>
+	</div>
+	<div class="container-fluid" id="gif_storage">
+	</div>
+</body>
+<script>
+$(document).ready(function(){
+	var categories = ["lightsaber","gundam","motorcycle","mandalorian","anime","cosplay","batman"];
+	var subject;
+	for (i = 0; i < categories.length; i++){
+		$("#buttons").append("<button id='" + categories[i] + "' class='giphy'>" + categories[i] + "</button>");
+	}
+	
+	
+	$("#data_submission").click(function(){
+		if ($("#new_data").val() == "") {
+			alert("You must input a value!");
+		} else {
+			var new_button = $('#new_data').val();
+			$("#buttons").append("<button id='" + new_button + "' class='giphy'>" + new_button + "</button>");
+			$("#new_data").val("");
+		}
+		
+	});
+	$(document).on('click','.giphy',function(){
+		$('#gif_storage').html("");
+		subject = $(this).attr('id');
+		var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + subject + "&api_key=GCfOfeKfaPaNvgEnmamNUU14WQCU6gkC&limit=10";
+		//console.log(queryURL);
+		$.ajax({url:queryURL,method:"GET"})
+		.done(function(response){
+			console.log(response);
+			for (i = 0; i < response.data.length; i++) {
+				var animate = response.data[i].images.downsized.url;
+				var still = response.data[i].images.downsized_still.url;
+				var rating = response.data[i].rating;
+				//console.log(animate);
+				$('#gif_storage').append("<img src='" + still + "' alt='New Gif' data-state='still' data-still='" + still + "' data-animate='" + animate + "'><p>Rating: " + rating + "</p>");
+			}
+			
+		});
+	});
+	$(document).on('click','#gif_storage img',function(){
+		var animate = $(this).attr('data-animate');
+		var still = $(this).attr('data-still');
+		if ($(this).attr('data-state') == 'still') {
+			$(this).attr('data-state','animate');
+			$(this).attr('src',animate);
+		} else {
+			$(this).attr('data-state','still');
+			$(this).attr('src',still);
+		}
+	});
+	
+});	
+</script>
+<style>
+	button {
+		margin: 5px;
+	}
+	img {
+		max-height: 200px;
+	}
+</style>
+</html>
