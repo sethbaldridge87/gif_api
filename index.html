@@ -44,7 +44,7 @@ $(document).ready(function(){
 	$(document).on('click','.giphy',function(){
 		$('#gif_storage').html("");
 		subject = $(this).attr('id');
-		var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + subject + "&api_key=GCfOfeKfaPaNvgEnmamNUU14WQCU6gkC&limit=10";
+		var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + subject + "&api_key=2VRjLRCH165YDIvnvFg8K2kOpAXDaSdI&limit=10";
 		//console.log(queryURL);
 		$.ajax({url:queryURL,method:"GET"})
 		.done(function(response){
