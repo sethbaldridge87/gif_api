@@ -1,4 +1,4 @@
-#Giphy API App
+# Giphy API
 
 Technologies used: jQuery, Bootstrap, AJAX, API
 
